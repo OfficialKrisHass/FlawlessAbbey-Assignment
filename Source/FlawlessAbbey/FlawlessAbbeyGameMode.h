@@ -1,0 +1,18 @@
+// Copyright Epic Games, Inc. All Rights Reserved.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/GameModeBase.h"
+#include "FlawlessAbbeyGameMode.generated.h"
+
+UCLASS(minimalapi)
+class AFlawlessAbbeyGameMode : public AGameModeBase
+{
+
+	GENERATED_BODY()
+
+public:
+	AFlawlessAbbeyGameMode();
+
+};
