@@ -1,8 +1,10 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "FlawlessAbbeyGameMode.h"
-#include "FlawlessAbbeyCharacter.h"
-#include "UObject/ConstructorHelpers.h"
+
+#include <UObject/ConstructorHelpers.h>
+
+#include <Player/FlawlessAbbeyCharacter.h>
 
 AFlawlessAbbeyGameMode::AFlawlessAbbeyGameMode() : Super() {
 	
