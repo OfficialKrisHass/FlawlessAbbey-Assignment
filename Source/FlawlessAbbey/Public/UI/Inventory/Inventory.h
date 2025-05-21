@@ -4,8 +4,10 @@
 #include "UI/UserWidgetBase.h"
 #include "Inventory.generated.h"
 
-class UTextBlock;
+struct FItemSlot;
+
 class UInventorySlot;
+class UButton;
 
 UCLASS(Abstract)
 class FLAWLESSABBEY_API UInventory : public UUserWidgetBase {
@@ -13,10 +15,13 @@ class FLAWLESSABBEY_API UInventory : public UUserWidgetBase {
 	GENERATED_BODY()
 
 public:
-#if WITH_EDITOR
-	virtual void OnDesignerChanged(const FDesignerChangedEventArgs& EventArgs) override;
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-#endif
+	void OnInventoryUpdated(const TArray<FItemSlot>& slots);
+
+	UFUNCTION(BlueprintCallable)
+	void CloseInventory();
+
+	UFUNCTION(BlueprintCallable)
+	void OpenInventory();
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
@@ -28,12 +33,13 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
 	TObjectPtr<UInventorySlot> slot3 = nullptr;
 
-	virtual void NativeOnInitialized() override;
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
+	TObjectPtr<UButton> closeButton = nullptr;
+
+	virtual void NativeConstruct() override;
 
 private:
 	UPROPERTY()
 	TArray<TObjectPtr<UInventorySlot>> m_slots;
-
-	void UpdateWidget();
 	
 };

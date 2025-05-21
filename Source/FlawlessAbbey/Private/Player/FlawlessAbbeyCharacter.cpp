@@ -2,6 +2,8 @@
 
 #include "Player/FlawlessAbbeyCharacter.h"
 
+#include "Inventory/InventoryComponent.h"
+
 #include <Engine/LocalPlayer.h>
 
 #include <Components/CapsuleComponent.h>
@@ -32,6 +34,8 @@ AFlawlessAbbeyCharacter::AFlawlessAbbeyCharacter() {
 	Mesh1P->bCastDynamicShadow = false;
 	Mesh1P->CastShadow = false;
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+
+	m_inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
 
 }
 
@@ -73,6 +77,9 @@ void AFlawlessAbbeyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerI
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AFlawlessAbbeyCharacter::Move);
 
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFlawlessAbbeyCharacter::Look);
+
+		EnhancedInputComponent->BindAction(openInventoryAction, ETriggerEvent::Triggered, m_inventory.Get(), &UInventoryComponent::OpenInventory);
+		EnhancedInputComponent->BindAction(closeInventoryAction, ETriggerEvent::Triggered, m_inventory.Get(), &UInventoryComponent::CloseInventory);
 	
 	} else
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));

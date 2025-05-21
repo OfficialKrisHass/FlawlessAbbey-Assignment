@@ -1,42 +1,56 @@
 #include "UI/Inventory/Inventory.h"
+#include "UI/Inventory/InventorySlot.h"
 
-#include <Components/TextBlock.h>
+#include "Inventory/ItemSlot.h"
 
-void UInventory::NativeOnInitialized() {
+#include <Components/CanvasPanel.h>
+#include <Components/HorizontalBox.h>
+#include <Components/Button.h>
 
-	Super::NativeOnInitialized();
+void UInventory::NativeConstruct() {
+
+	Super::NativeConstruct();
 
     m_slots.Add(slot0);
     m_slots.Add(slot1);
     m_slots.Add(slot2);
     m_slots.Add(slot3);
-    
-	UpdateWidget();
+
+    closeButton->OnClicked.AddDynamic(this, &UInventory::CloseInventory);
 
 }
 
-void UInventory::UpdateWidget() {
+void UInventory::OnInventoryUpdated(const TArray<FItemSlot>& slots) {
 
-    //
-
-}
-
-#ifdef WITH_EDITOR
-void UInventory::OnDesignerChanged(const FDesignerChangedEventArgs& args) {
-
-    Super::OnDesignerChanged(args);
-
-    UpdateWidget();
+    for (int32 i = 0; i < slots.Num(); i++)
+        m_slots[i]->SetItem(slots[i].item);
 
 }
-void UInventory::PostEditChangeProperty(FPropertyChangedEvent& event) {
 
-    Super::PostEditChangeProperty(event);
+void UInventory::CloseInventory() {
 
-    const FString propName = (event.Property != nullptr) ? event.Property->GetFName().ToString() : TEXT("");
-    //if (propName != TEXT("InMag") || propName != TEXT("Mags")) return;
+    SetVisibility(ESlateVisibility::Hidden);
 
-    UpdateWidget();
+    if (TObjectPtr<APlayerController> controller = GetOwningPlayer()) {
+
+        controller->SetShowMouseCursor(false);
+        controller->SetInputMode(FInputModeGameOnly());
+
+    }
 
 }
-#endif
+void UInventory::OpenInventory() {
+
+    if (!IsInViewport())
+        AddToViewport();
+
+    SetVisibility(ESlateVisibility::Visible);
+
+    if (TObjectPtr<APlayerController> controller = GetOwningPlayer()) {
+
+        controller->SetShowMouseCursor(true);
+        controller->SetInputMode(FInputModeUIOnly());
+
+    }
+
+}
