@@ -1,6 +1,8 @@
 #include "UI/Inventory/Inventory.h"
 #include "UI/Inventory/InventorySlot.h"
 
+#include "Player/FlawlessAbbeyPlayerController.h"
+
 #include "Inventory/ItemSlot.h"
 
 #include <Components/CanvasPanel.h>
@@ -31,12 +33,13 @@ void UInventory::CloseInventory() {
 
     SetVisibility(ESlateVisibility::Hidden);
 
-    if (TObjectPtr<APlayerController> controller = GetOwningPlayer()) {
+    TObjectPtr<AFlawlessAbbeyPlayerController> controller = Cast<AFlawlessAbbeyPlayerController>(GetOwningPlayer());
+    if (controller == nullptr) return;
 
-        controller->SetShowMouseCursor(false);
-        controller->SetInputMode(FInputModeGameOnly());
+    controller->SetShowMouseCursor(false);
+    controller->SetInputMode(FInputModeGameOnly());
 
-    }
+    controller->EnableMovement();
 
 }
 void UInventory::OpenInventory() {
@@ -46,11 +49,12 @@ void UInventory::OpenInventory() {
 
     SetVisibility(ESlateVisibility::Visible);
 
-    if (TObjectPtr<APlayerController> controller = GetOwningPlayer()) {
+    TObjectPtr<AFlawlessAbbeyPlayerController> controller = Cast<AFlawlessAbbeyPlayerController>(GetOwningPlayer());
+    if (controller == nullptr) return;
 
-        controller->SetShowMouseCursor(true);
-        controller->SetInputMode(FInputModeUIOnly());
+    controller->SetShowMouseCursor(true);
+    controller->SetInputMode(FInputModeGameAndUI());
 
-    }
+    controller->DisableMovement();
 
 }

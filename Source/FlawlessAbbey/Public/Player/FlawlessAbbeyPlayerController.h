@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "FlawlessAbbeyPlayerController.generated.h"
 
+class UEnhancedInputLocalPlayerSubsystem;
+
 class UInputMappingContext;
 
 UCLASS()
@@ -13,10 +15,24 @@ class FLAWLESSABBEY_API AFlawlessAbbeyPlayerController : public APlayerControlle
 
 	GENERATED_BODY()
 	
+public:
+	UFUNCTION(BlueprintCallable)
+	void EnableMovement();
+	UFUNCTION(BlueprintCallable)
+	void DisableMovement();
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputMappingContext* InputMappingContext;
+	UInputMappingContext* defaultMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	UInputMappingContext* uiMappingContext;
 
 	virtual void BeginPlay() override;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UEnhancedInputLocalPlayerSubsystem> m_inputSubsystem = nullptr;
+
 
 };

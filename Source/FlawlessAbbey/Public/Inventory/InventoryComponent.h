@@ -30,7 +30,7 @@ public:
 	void RemoveItem(UItemData* item);
 
 	UFUNCTION(BlueprintCallable)
-	void BindUI(UInventory* inventoryUI) { m_inventoryUI = inventoryUI; }
+	inline void BindUI(UInventory* inventoryUI) { m_inventoryUI = inventoryUI; }
 
 private:
 	UPROPERTY(EditDefaultsOnly) TArray<FItemSlot> m_slots;

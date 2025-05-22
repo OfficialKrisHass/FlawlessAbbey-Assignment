@@ -10,7 +10,22 @@ void AFlawlessAbbeyPlayerController::BeginPlay() {
 
 	Super::BeginPlay();
 
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-		Subsystem->AddMappingContext(InputMappingContext, 0);
+	m_inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	if (m_inputSubsystem == nullptr) return;
+
+	m_inputSubsystem->AddMappingContext(defaultMappingContext, 0);
+	m_inputSubsystem->AddMappingContext(uiMappingContext, 1);
+
+}
+
+void AFlawlessAbbeyPlayerController::EnableMovement() {
+
+	m_inputSubsystem->AddMappingContext(defaultMappingContext, 0);
+
+}
+
+void AFlawlessAbbeyPlayerController::DisableMovement() {
+
+	m_inputSubsystem->RemoveMappingContext(defaultMappingContext);
 
 }
