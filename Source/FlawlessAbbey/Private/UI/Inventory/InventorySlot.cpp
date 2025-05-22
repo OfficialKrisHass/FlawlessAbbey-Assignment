@@ -1,59 +1,44 @@
 #include "UI/Inventory/InventorySlot.h"
+#include "UI/Inventory/ItemIcon.h"
 
 #include "Inventory/Item.h"
+#include "Inventory/InventoryComponent.h"
 
-#include <Components/Button.h>
-#include <Components/Image.h>
+#include "Player/FlawlessAbbeyCharacter.h"
 
-void UInventorySlot::NativeOnInitialized() {
+#include <Blueprint/DragDropOperation.h>
 
-	Super::NativeOnInitialized();
+void UInventorySlot::NativeConstruct() {
 
-	UpdateWidget();
+	Super::NativeConstruct();
 
-}
-
-void UInventorySlot::UpdateWidget() {
-
-	if (icon == nullptr) return;
-
-	if (m_item != nullptr) {
-
-		icon->SetBrushFromTexture(m_item->icon);
-		icon->SetOpacity(1.0f);
-
-	}
-	else {
-
-		icon->SetBrushFromTexture(nullptr);
-		icon->SetOpacity(0.0f);
-
-	}
+	icon->SetSlot(this);
+	icon->UpdateWidget();
 
 }
 
-void UInventorySlot::SetItem(TObjectPtr<UItemData> item) {
-
-	if (m_item == item) return;
+void UInventorySlot::SetItem(UItemData* item) {
 
 	m_item = item;
-	UpdateWidget();
+	icon->UpdateWidget();
 
 }
 
-#ifdef WITH_EDITOR
-void UInventorySlot::OnDesignerChanged(const FDesignerChangedEventArgs& args) {
+bool UInventorySlot::NativeOnDrop(const FGeometry& geometry, const FDragDropEvent& event, UDragDropOperation* operation) {
 
-	Super::OnDesignerChanged(args);
+	if (m_item != nullptr) return false;
 
-	UpdateWidget();
+	TObjectPtr<UItemData> item = Cast<UItemData>(operation->Payload);
+	if (item == nullptr) return false;
+
+	m_item = item;
+	icon->UpdateWidget();
+
+	TObjectPtr<AFlawlessAbbeyCharacter> character = Cast<AFlawlessAbbeyCharacter>(GetOwningPlayer()->GetCharacter());
+	if (character == nullptr) return false;
+
+	character->GetInventoryComponent()->AddItemToSlot(item, m_index);
+
+	return true;
 
 }
-void UInventorySlot::PostEditChangeProperty(FPropertyChangedEvent& event) {
-
-	Super::PostEditChangeProperty(event);
-
-	UpdateWidget();
-
-}
-#endif

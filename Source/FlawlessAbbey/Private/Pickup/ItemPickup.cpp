@@ -50,6 +50,8 @@ void AItemPickup::BeginOverlap(UPrimitiveComponent* overlapedComponent, AActor* 
 	if (player == nullptr) return;
 
 	player->GetInventoryComponent()->AddItem(m_item);
+	player->GetInventoryComponent()->UpdateInventoryUI();
+
 	Destroy();
 
 }

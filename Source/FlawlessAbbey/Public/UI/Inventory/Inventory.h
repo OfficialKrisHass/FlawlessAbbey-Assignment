@@ -7,6 +7,7 @@
 struct FItemSlot;
 
 class UInventorySlot;
+class UViewportSlot;
 class UButton;
 
 UCLASS(Abstract)
@@ -15,7 +16,7 @@ class FLAWLESSABBEY_API UInventory : public UUserWidgetBase {
 	GENERATED_BODY()
 
 public:
-	void OnInventoryUpdated(const TArray<FItemSlot>& slots);
+	void Update(const TArray<FItemSlot>& slots);
 
 	UFUNCTION(BlueprintCallable)
 	void CloseInventory();
@@ -32,6 +33,9 @@ protected:
 	TObjectPtr<UInventorySlot> slot2 = nullptr;
 	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
 	TObjectPtr<UInventorySlot> slot3 = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
+	TObjectPtr<UViewportSlot> viewportSlot = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
 	TObjectPtr<UButton> closeButton = nullptr;

@@ -25,9 +25,16 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool AddItem(UItemData* item);
-
 	UFUNCTION(BlueprintCallable)
 	void RemoveItem(UItemData* item);
+
+	UFUNCTION(BlueprintCallable)
+	bool AddItemToSlot(UItemData* item, int32 slotIndex);
+	UFUNCTION(BlueprintCallable)
+	void RemoveItemFromSlot(int32 slotIndex);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateInventoryUI();
 
 	UFUNCTION(BlueprintCallable)
 	inline void BindUI(UInventory* inventoryUI) { m_inventoryUI = inventoryUI; }

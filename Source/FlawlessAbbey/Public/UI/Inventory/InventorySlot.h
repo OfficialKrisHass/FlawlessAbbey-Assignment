@@ -4,37 +4,44 @@
 #include "UI/UserWidgetBase.h"
 #include "InventorySlot.generated.h"
 
-class UButton;
-class UImage;
-
 class UItemData;
 
-UCLASS()
+class UItemIcon;
+class UButton;
+
+UCLASS(Abstract)
 class FLAWLESSABBEY_API UInventorySlot : public UUserWidgetBase {
 
 	GENERATED_BODY()
 
 public:
-	void SetItem(TObjectPtr<UItemData> item);
+	UFUNCTION(BlueprintCallable)
+	inline void SetIndex(int32 value) { m_index = value; }
 
-#if WITH_EDITOR
-	virtual void OnDesignerChanged(const FDesignerChangedEventArgs& EventArgs) override;
-	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-#endif
+	UFUNCTION(BlueprintCallable)
+	inline int32 GetIndex() const { return m_index; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetItem(UItemData* item);
+
+	UFUNCTION(BlueprintCallable)
+	inline UItemData* GetItem() const { return m_item; }
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
 	TObjectPtr<UButton> button = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
-	TObjectPtr<UImage> icon = nullptr;
+	TObjectPtr<UItemIcon> icon = nullptr;
 
-	virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
 
-private:
+	virtual bool NativeOnDrop(const FGeometry& geometry, const FDragDropEvent& event, UDragDropOperation* operation) override;
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UItemData> m_item = nullptr;
 
-	void UpdateWidget();
+	UPROPERTY(VisibleAnywhere)
+	int32 m_index = -1;
 	
 };

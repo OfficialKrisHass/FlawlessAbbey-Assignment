@@ -37,9 +37,6 @@ bool UInventoryComponent::AddItem(UItemData* item) {
 		if (slot.item != nullptr) continue;
 		slot.item = item;
 
-		if (m_inventoryUI != nullptr)
-			m_inventoryUI->OnInventoryUpdated(m_slots);
-
 		return true;
 
 	}
@@ -47,7 +44,6 @@ bool UInventoryComponent::AddItem(UItemData* item) {
 	return false;
 
 }
-
 void UInventoryComponent::RemoveItem(UItemData* item) {
 
 	if (item == nullptr) return;
@@ -57,11 +53,37 @@ void UInventoryComponent::RemoveItem(UItemData* item) {
 		if (slot.item.Get() != item) continue;
 		slot.item = nullptr;
 
-		if (m_inventoryUI != nullptr)
-			m_inventoryUI->OnInventoryUpdated(m_slots);
-
 		return;
 
 	}
+
+}
+
+bool UInventoryComponent::AddItemToSlot(UItemData* item, int32 slotIndex) {
+
+	if (slotIndex > 3) return false;
+
+	FItemSlot& slot = m_slots[slotIndex];
+	if (slot.item != nullptr) return false;
+
+	slot.item = item;
+
+	return true;
+
+}
+void UInventoryComponent::RemoveItemFromSlot(int32 slotIndex) {
+
+	if (slotIndex > 3) return;
+
+	FItemSlot& slot = m_slots[slotIndex];
+	if (slot.item == nullptr) return;
+
+	slot.item = nullptr;
+
+}
+
+void UInventoryComponent::UpdateInventoryUI() {
+
+	m_inventoryUI->Update(m_slots);
 
 }
