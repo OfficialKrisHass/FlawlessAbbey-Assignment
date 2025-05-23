@@ -9,6 +9,8 @@ struct FItemSlot;
 
 class UInventory;
 
+class AViewportPreview;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class FLAWLESSABBEY_API UInventoryComponent : public UActorComponent {
 
@@ -17,11 +19,23 @@ class FLAWLESSABBEY_API UInventoryComponent : public UActorComponent {
 public:
 	UInventoryComponent();
 
-	UFUNCTION(BlueprintCallable)
-	void OpenInventory();
+	// UI
 
 	UFUNCTION(BlueprintCallable)
+	void OpenInventory();
+	UFUNCTION(BlueprintCallable)
 	void CloseInventory();
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateInventoryUI();
+
+	UFUNCTION(BlueprintCallable)
+	inline void BindUI(UInventory* inventoryUI) { m_inventoryUI = inventoryUI; }
+
+	UFUNCTION(BlueprintCallable)
+	inline UInventory* GetUI() const { return m_inventoryUI; }
+
+	// Inventory
 
 	UFUNCTION(BlueprintCallable)
 	bool AddItem(UItemData* item);
@@ -33,15 +47,22 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RemoveItemFromSlot(int32 slotIndex);
 
-	UFUNCTION(BlueprintCallable)
-	void UpdateInventoryUI();
+	// Preview
 
 	UFUNCTION(BlueprintCallable)
-	inline void BindUI(UInventory* inventoryUI) { m_inventoryUI = inventoryUI; }
+	void PreviewItem(UItemData* item);
 
 private:
 	UPROPERTY(EditDefaultsOnly) TArray<FItemSlot> m_slots;
 	UPROPERTY() TObjectPtr<UInventory> m_inventoryUI = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Viewport preview")
+	TSubclassOf<AViewportPreview> viewportPreviewClass;
+	UPROPERTY(EditAnywhere, Category = "Viewport preview")
+	FVector viewportPreviewLocation;
+
+	UPROPERTY()
+	TObjectPtr<AViewportPreview> m_viewportPreview = nullptr;
 
 	virtual void BeginPlay() override;
 	

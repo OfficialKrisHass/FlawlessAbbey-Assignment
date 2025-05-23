@@ -8,6 +8,7 @@ struct FItemSlot;
 
 class UInventorySlot;
 class UViewportSlot;
+class UViewportPanel;
 class UButton;
 
 UCLASS(Abstract)
@@ -24,6 +25,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void OpenInventory();
 
+	UFUNCTION(BlueprintCallable)
+	inline UViewportPanel* GetViewportPanel() const { return viewportPanel; }
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
 	TObjectPtr<UInventorySlot> slot0 = nullptr;
@@ -36,6 +40,8 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
 	TObjectPtr<UViewportSlot> viewportSlot = nullptr;
+	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
+	TObjectPtr<UViewportPanel> viewportPanel = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
 	TObjectPtr<UButton> closeButton = nullptr;

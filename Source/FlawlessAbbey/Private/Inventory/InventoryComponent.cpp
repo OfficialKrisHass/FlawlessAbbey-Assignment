@@ -1,8 +1,10 @@
 #include "Inventory/InventoryComponent.h"
 #include "Inventory/Item.h"
 #include "Inventory/ItemSlot.h"
+#include "Inventory/ViewportPreview.h"
 
 #include "UI/Inventory/Inventory.h"
+#include "UI/Inventory/ViewportPanel.h"
 
 UInventoryComponent::UInventoryComponent() {
 	
@@ -15,6 +17,11 @@ UInventoryComponent::UInventoryComponent() {
 void UInventoryComponent::BeginPlay() {
 
 	Super::BeginPlay();
+
+	FActorSpawnParameters spawnParams;
+	spawnParams.Owner = GetOwner();
+
+	m_viewportPreview = GetWorld()->SpawnActor<AViewportPreview>(viewportPreviewClass, viewportPreviewLocation, FRotator(), spawnParams);
 	
 }
 
@@ -23,10 +30,15 @@ void UInventoryComponent::OpenInventory() {
 	m_inventoryUI->OpenInventory();
 
 }
-
 void UInventoryComponent::CloseInventory() {
 
 	m_inventoryUI->CloseInventory();
+
+}
+
+void UInventoryComponent::UpdateInventoryUI() {
+
+	m_inventoryUI->Update(m_slots);
 
 }
 
@@ -82,8 +94,8 @@ void UInventoryComponent::RemoveItemFromSlot(int32 slotIndex) {
 
 }
 
-void UInventoryComponent::UpdateInventoryUI() {
+void UInventoryComponent::PreviewItem(UItemData* item) {
 
-	m_inventoryUI->Update(m_slots);
+	//
 
 }

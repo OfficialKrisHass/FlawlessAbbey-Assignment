@@ -31,8 +31,7 @@ bool UInventorySlot::NativeOnDrop(const FGeometry& geometry, const FDragDropEven
 	TObjectPtr<UItemData> item = Cast<UItemData>(operation->Payload);
 	if (item == nullptr) return false;
 
-	m_item = item;
-	icon->UpdateWidget();
+	SetItem(item);
 
 	TObjectPtr<AFlawlessAbbeyCharacter> character = Cast<AFlawlessAbbeyCharacter>(GetOwningPlayer()->GetCharacter());
 	if (character == nullptr) return false;

@@ -22,7 +22,7 @@ public:
 	inline int32 GetIndex() const { return m_index; }
 
 	UFUNCTION(BlueprintCallable)
-	void SetItem(UItemData* item);
+	virtual void SetItem(UItemData* item);
 
 	UFUNCTION(BlueprintCallable)
 	inline UItemData* GetItem() const { return m_item; }
