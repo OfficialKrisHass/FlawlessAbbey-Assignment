@@ -45,3 +45,14 @@ protected:
 	int32 m_index = -1;
 	
 };
+
+UCLASS()
+class FLAWLESSABBEY_API UDragPayload : public UObject {
+
+	GENERATED_BODY()
+
+public:
+	TObjectPtr<UItemData> item = nullptr;
+	TObjectPtr<UInventorySlot> slot = nullptr;
+
+};

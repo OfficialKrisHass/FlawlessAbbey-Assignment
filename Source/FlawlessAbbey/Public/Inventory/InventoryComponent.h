@@ -53,8 +53,11 @@ public:
 	inline AViewportPreview* GetViewportPreview() const { return m_viewportPreview; }
 
 private:
-	UPROPERTY(EditDefaultsOnly) TArray<FItemSlot> m_slots;
-	UPROPERTY() TObjectPtr<UInventory> m_inventoryUI = nullptr;
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FItemSlot> m_slots;
+
+	UPROPERTY()
+	TObjectPtr<UInventory> m_inventoryUI = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Viewport preview")
 	TSubclassOf<AViewportPreview> viewportPreviewClass;

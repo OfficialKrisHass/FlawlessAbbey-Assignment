@@ -26,17 +26,22 @@ void UInventorySlot::SetItem(UItemData* item) {
 
 bool UInventorySlot::NativeOnDrop(const FGeometry& geometry, const FDragDropEvent& event, UDragDropOperation* operation) {
 
-	if (m_item != nullptr) return false;
-
-	TObjectPtr<UItemData> item = Cast<UItemData>(operation->Payload);
-	if (item == nullptr) return false;
-
-	SetItem(item);
+	TObjectPtr<UDragPayload> payload = Cast<UDragPayload>(operation->Payload);
+	if (payload == nullptr) return false;
 
 	TObjectPtr<AFlawlessAbbeyCharacter> character = Cast<AFlawlessAbbeyCharacter>(GetOwningPlayer()->GetCharacter());
 	if (character == nullptr) return false;
 
-	character->GetInventoryComponent()->AddItemToSlot(item, m_index);
+	if (m_item != nullptr) {
+
+		payload->slot->SetItem(m_item);
+		character->GetInventoryComponent()->AddItemToSlot(m_item, payload->slot->m_index);
+		character->GetInventoryComponent()->RemoveItemFromSlot(m_index);
+
+	}
+
+	SetItem(payload->item);
+	character->GetInventoryComponent()->AddItemToSlot(payload->item, m_index);
 
 	return true;
 

@@ -47,8 +47,13 @@ void UItemIcon::NativeOnDragDetected(const FGeometry& geometry, const FPointerEv
 	if (visual == nullptr) return;
 	visual->SetIcon(m_slot->GetItem());
 
-	operation->Payload = Cast<UObject>(m_slot->GetItem());
+	TObjectPtr<UDragPayload> payload = NewObject<UDragPayload>();
+	payload->item = m_slot->GetItem();
+	payload->slot = m_slot;
+
+	operation->Payload = Cast<UObject>(payload);
 	operation->DefaultDragVisual = visual;
+	operation->OnDragCancelled.AddDynamic(this, &UItemIcon::HandleDragCancelled);
 	outOperation = operation;
 
 	m_slot->SetItem(nullptr);
@@ -57,5 +62,18 @@ void UItemIcon::NativeOnDragDetected(const FGeometry& geometry, const FPointerEv
 	if (character == nullptr) return;
 
 	character->GetInventoryComponent()->RemoveItemFromSlot(m_slot->GetIndex());
+
+}
+
+void UItemIcon::HandleDragCancelled(UDragDropOperation* operation) {
+
+	TObjectPtr<UDragPayload> payload = Cast<UDragPayload>(operation->Payload);
+	if (payload == nullptr) return;
+
+	TObjectPtr<AFlawlessAbbeyCharacter> character = Cast<AFlawlessAbbeyCharacter>(GetOwningPlayer()->GetCharacter());
+	if (character == nullptr) return;
+
+	payload->slot->SetItem(payload->item);
+	character->GetInventoryComponent()->AddItemToSlot(payload->item, payload->slot->GetIndex());
 
 }

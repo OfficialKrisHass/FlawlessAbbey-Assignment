@@ -28,6 +28,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Widgets", meta = (BindWidget))
 	TObjectPtr<UImage> icon = nullptr;
 
+	UFUNCTION()
+	void HandleDragCancelled(UDragDropOperation* operation);
+
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& geometry, const FPointerEvent& mouseEvent) override;
 	virtual void NativeOnDragDetected(const FGeometry& geometry, const FPointerEvent& mouseEvent, UDragDropOperation*& outOperation) override;
 

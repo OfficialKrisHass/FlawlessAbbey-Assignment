@@ -19,6 +19,8 @@ void UViewportSlot::NativeConstruct() {
 	icon->SetSlot(this);
 	icon->UpdateWidget();
 
+	SetIndex(4);
+
 }
 
 void UViewportSlot::SetItem(UItemData* item) {
@@ -59,18 +61,5 @@ void UViewportSlot::SetItem(UItemData* item) {
 	}
 
 	viewport->SetTexture(item->icon);
-
-}
-
-bool UViewportSlot::NativeOnDrop(const FGeometry& geometry, const FDragDropEvent& event, UDragDropOperation* operation) {
-
-	if (m_item != nullptr) return false;
-
-	TObjectPtr<UItemData> item = Cast<UItemData>(operation->Payload);
-	if (item == nullptr) return false;
-
-	SetItem(item);
-
-	return true;
 
 }
