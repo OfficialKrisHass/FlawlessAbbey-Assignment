@@ -1,7 +1,7 @@
 #include "UI/Inventory/InventorySlot.h"
 #include "UI/Inventory/ItemIcon.h"
 
-#include "Inventory/Item.h"
+#include "Inventory/ItemData.h"
 #include "Inventory/InventoryComponent.h"
 
 #include "Player/FlawlessAbbeyCharacter.h"

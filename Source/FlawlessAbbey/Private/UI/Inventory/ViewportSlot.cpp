@@ -3,8 +3,10 @@
 #include "UI/Inventory/Inventory.h"
 #include "UI/Inventory/ItemIcon.h"
 
-#include "Inventory/Item.h"
+#include "Inventory/ItemData.h"
+#include "Inventory/ItemData3D.h"
 #include "Inventory/InventoryComponent.h"
+#include "Inventory/ViewportPreview.h"
 
 #include "Player/FlawlessAbbeyCharacter.h"
 
@@ -23,6 +25,8 @@ void UViewportSlot::SetItem(UItemData* item) {
 
 	UInventorySlot::SetItem(item);
 
+	// Get the things
+
 	TObjectPtr<AFlawlessAbbeyCharacter> character = Cast<AFlawlessAbbeyCharacter>(GetOwningPlayer()->GetCharacter());
 	if (character == nullptr) return;
 
@@ -32,10 +36,29 @@ void UViewportSlot::SetItem(UItemData* item) {
 	TObjectPtr<UViewportPanel> viewport = Cast<UViewportPanel>(inventoryUI->GetViewportPanel());
 	if (viewport == nullptr) return;
 
-	if (item != nullptr)
-		viewport->SetTexture(item->icon);
-	else
+	// Implementation
+
+	if (item == nullptr) {
+
 		viewport->SetTexture(nullptr);
+		return;
+
+	}
+
+	TObjectPtr<UItemData3D> item3D = Cast<UItemData3D>(item);
+	if (item3D != nullptr) {
+
+		TObjectPtr<AViewportPreview> viewportPreview = Cast<AViewportPreview>(character->GetInventoryComponent()->GetViewportPreview());
+		if (viewportPreview == nullptr) return;
+
+		viewportPreview->SetMesh(item3D->mesh);
+		viewport->SetMaterial(viewportPreview->GetOutputMaterial());
+
+		return;
+
+	}
+
+	viewport->SetTexture(item->icon);
 
 }
 

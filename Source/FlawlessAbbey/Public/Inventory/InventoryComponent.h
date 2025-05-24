@@ -50,7 +50,7 @@ public:
 	// Preview
 
 	UFUNCTION(BlueprintCallable)
-	void PreviewItem(UItemData* item);
+	inline AViewportPreview* GetViewportPreview() const { return m_viewportPreview; }
 
 private:
 	UPROPERTY(EditDefaultsOnly) TArray<FItemSlot> m_slots;

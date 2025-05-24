@@ -2,7 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "Item.generated.h"
+#include "ItemData.generated.h"
 
 class UTexture2D;
 

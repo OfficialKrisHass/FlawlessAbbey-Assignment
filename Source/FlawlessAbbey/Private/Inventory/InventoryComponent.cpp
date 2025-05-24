@@ -1,5 +1,5 @@
 #include "Inventory/InventoryComponent.h"
-#include "Inventory/Item.h"
+#include "Inventory/ItemData.h"
 #include "Inventory/ItemSlot.h"
 #include "Inventory/ViewportPreview.h"
 
@@ -91,11 +91,5 @@ void UInventoryComponent::RemoveItemFromSlot(int32 slotIndex) {
 	if (slot.item == nullptr) return;
 
 	slot.item = nullptr;
-
-}
-
-void UInventoryComponent::PreviewItem(UItemData* item) {
-
-	//
 
 }
