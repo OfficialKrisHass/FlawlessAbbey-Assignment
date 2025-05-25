@@ -13,8 +13,7 @@ AInteractible::AInteractible() {
 
 	mesh->SetSimulatePhysics(true);
 	mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	mesh->SetCollisionResponseToAllChannels(ECR_Block);
-	mesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+	mesh->SetCollisionObjectType(ECC_WorldDynamic);
 
 	// Trigger setup, only overlap with the player
 

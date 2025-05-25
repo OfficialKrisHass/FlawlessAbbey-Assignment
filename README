@@ -1,2 +1,35 @@
-# Flawless Abbey test assignment
-This repository is for the flawless abbey test assignement, made by Jakub (Kris) Oravec.
+# Flawless Abbey test task
+This README explains the design decisions for the Flawless Abbey test task. I started with the FPS starter project, with starter content enabled.
+
+# Inventory
+The inventory system stores items as Primary Data assets for ease of creation, inheritance and better usability. The core management and storing of the inventory is handled by the Inventory Component, which in turn updates the UI, separating data and functionality from UI.
+
+The Drag and drop system utilizes the NativeOnDragDetected and NativeOnDrop functions provided by UMG, where the payload is a UObject derived class that stores the item and the slot the drag started from, so that when the drag is cancelled or dropped on top of an already occupied slot the item will be returned to the original slot, or swapped with the other slots item.
+
+3D items are simply a derived class of the base item, that contains a static mesh that will be rendered in the viewport preview, this makes the 3D items behave just like normal items in the inventory slots.
+
+The viewport preview is handled by an Actor that is spawned by the inventory component as it is part of the inventory system, so logically should be handled by the inventory "manager". It is a actor with a static mesh and a scene capture 2D attached to a spring arm that rotates the camera around the object, or pulls it in. Which is all handled by overriding the NativeOnMouseMove and OnMouseWheel events inside the Viewport Panel and sending that data to the viewport preview.
+
+# Input
+The input is using the new enhanced input system. The default controls like movement, but also opening the inventory or interacting with an object, are part of the Defualt mapping context, which is handled by the Player Controller. These input actions are the ones that are available during normal gameplay, without any UI opened.
+
+When a UI is opened, like the inventory, or the dialogue box, it tels the player controller to remove the default mapping context, which no longer lets the player to move or open any other UIs, and replaces it with a mapping context for that specific UI. This modular systems gives the developer control of what UI and actions can be used when, with barely any hassle.
+
+In the case of the inventory, that UI contains only the close action, and the dialogue UI contains the Advance action. All only available when their respective UI is opened. These mapping contexts and actions are stored in the respective UI manager (Inventory component or Dialogue manager component)
+
+# Interactibles
+The base class AInteractible is an actor with a mesh and a box component trigger which is assigned to the collision channel 1. Different interactible elements can derive from this class and all they have to do is to override the Interact function. The player checks for overlaps with that channel, and when one happens, it stores the interactible it overlapped with, until that overlap ends. Once a Interact action is triggered, the Interact function for that Interactible will be called.
+
+This system allows for different kinds of interactibles with different functionalities and minimal code overhead as most of it is handled by the player, or the interactible base class.
+
+# Dialogue
+Each encounter is a dialogue script, a primary data asset derived function that represents a specific encounter/script. This structure stores the lines, which are a struct that store the text and the character index. The characters themself store the character name, text color, and whether their text is right or left justified. They are also stored in the data asset at the moment, but normally would be a separate Data asset, that can be reused in different dialogue scripts. This makes it simpler to make long dialogue scripts with multiple characters, without having to write the character name and assign their text color to every single dialogue line.
+
+A dialogue encounter can be started by coming near a Dialogue Trigger, which derives the class AInteractible. When it is interacted with it tells the dialogue manager to start the dialogue. The manager creates the dialogue box and adds it to the viewport, and also destroys it at the end of the dialogue. The reason why this is created on the fly, instead of being always in the viewport, only hidden when not needed (like the Inventory UI) is that the inventory is a much more core part that can be opened and closed at any time, most of the time pretty frequently, and controller by the player, where as the dialogue box will be visible only when a dialogue is triggered, which is less often then the inventory is opened.
+
+The Dialogue manager sets the dialogue boxes line to the first line of the dialogue, removes the default mapping context and replaces it with the dialogue specific one as to disable the player movement, and advance the dialogue with the press of the space bar or left mouse button. Whenever the dialogue is advanced, we check if we are at the end of the dialogue, if so we end and close it. If not we update the dialogue box to the next line. That itself just sets the text, character name, color and text justification from the passed script and line index (normally this would be just the FDialogueLine itself, but since we need the script itself to get the characters, this is easier for now but should be replaced later).
+
+# Last details
+Almost all of the 'if (pointer == nullptr) return;' checks should be replaced with an assert. They should never actually be true, if they are, something is wrong and needs to be catched in development and never reach release. So for that reason they are unnecessary in the release build as they only slow down the game with if statements that should always be false.
+
+The file structure of the code is a bit messy as most of it is kept from the project template, and not even used, but I am too lazy to remove it for a test task like this. Normally it would be much cleaner.
