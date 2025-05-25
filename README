@@ -1,6 +1,9 @@
 # Flawless Abbey test task
 This README explains the design decisions for the Flawless Abbey test task. I started with the FPS starter project, with starter content enabled.
 
+# How to test
+Open the editor, and start PIE. The three cubes in front of your are item pickups, they will be picked up and disappear once you come close enough to them. The cube on the left is a Dialogue trigger, come close enough and press E to start the dialogue. Use Space or left mouse button to advance the dialogue, once at the end, advance once more to end the dialogue. Open the inventory by pressing TAB, and close it by pressing TAB, Escape, or the button in the top right corner. The 4 slots at the bottom are normal slots, and the one at the top left corner is the viewport slot. Items can be dragged and drop between other slots, and once an item is dropped inside the viewport slot, the viewport panel (the empty space on the right side of the slot) will either display the larger item icon, or a live preview of the 3D model. Press and hold the left mouse button and move the mouse around to rotate the viewport, and use the scroll wheel to zoom in/out.
+
 # Inventory
 The inventory system stores items as Primary Data assets for ease of creation, inheritance and better usability. The core management and storing of the inventory is handled by the Inventory Component, which in turn updates the UI, separating data and functionality from UI.
 
