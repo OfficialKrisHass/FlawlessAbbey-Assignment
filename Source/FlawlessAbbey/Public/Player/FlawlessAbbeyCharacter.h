@@ -7,7 +7,10 @@
 #include "Logging/LogMacros.h"
 #include "FlawlessAbbeyCharacter.generated.h"
 
+class AInteractible;
+
 class UInventoryComponent;
+class UDialogueManagerComponent;
 
 class UInputComponent;
 class USkeletalMeshComponent;
@@ -35,8 +38,17 @@ public:
 
 	TObjectPtr<UInventoryComponent> GetInventoryComponent() const { return m_inventory; }
 
-private:
+	TObjectPtr<UDialogueManagerComponent> GetDialogueManagerComponent() const { return m_dialogueManager; }
 
+protected:
+	virtual void BeginPlay();
+
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+
+	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+
+private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Mesh, meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USkeletalMeshComponent> Mesh1P;
 
@@ -46,22 +58,26 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Inventory")
 	TObjectPtr<UInventoryComponent> m_inventory = nullptr;
 
+	UPROPERTY(VisibleAnywhere, Category = "Dialogue")
+	TObjectPtr<UDialogueManagerComponent> m_dialogueManager = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* JumpAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	UInputAction* MoveAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UInputAction> openInventoryAction = nullptr;
+	TObjectPtr<UInputAction> interactAction = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UInputAction> closeInventoryAction = nullptr;
+	TObjectPtr<UInputAction> openInventoryAction = nullptr;
 
-protected:
-	virtual void BeginPlay();
+	UPROPERTY()
+	TObjectPtr<AInteractible> overlappingInteractible = nullptr;
 
-	void Move(const FInputActionValue& Value);
-	void Look(const FInputActionValue& Value);
+	void Interact();
 
-	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+	virtual void NotifyActorBeginOverlap(AActor* other) override;
+	virtual void NotifyActorEndOverlap(AActor* other) override;
 
 };

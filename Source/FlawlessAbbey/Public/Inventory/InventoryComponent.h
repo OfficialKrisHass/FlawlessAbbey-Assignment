@@ -11,6 +11,9 @@ class UInventory;
 
 class AViewportPreview;
 
+class UInputMappingContext;
+class UInputAction;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class FLAWLESSABBEY_API UInventoryComponent : public UActorComponent {
 
@@ -56,14 +59,18 @@ private:
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FItemSlot> m_slots;
 
-	UPROPERTY()
-	TObjectPtr<UInventory> m_inventoryUI = nullptr;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> closeAction = nullptr;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputMappingContext> inventoryMappingContext = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Viewport preview")
 	TSubclassOf<AViewportPreview> viewportPreviewClass;
 	UPROPERTY(EditAnywhere, Category = "Viewport preview")
 	FVector viewportPreviewLocation;
 
+	UPROPERTY()
+	TObjectPtr<UInventory> m_inventoryUI = nullptr;
 	UPROPERTY()
 	TObjectPtr<AViewportPreview> m_viewportPreview = nullptr;
 

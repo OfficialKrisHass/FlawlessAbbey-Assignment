@@ -13,19 +13,22 @@ void AFlawlessAbbeyPlayerController::BeginPlay() {
 	m_inputSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	if (m_inputSubsystem == nullptr) return;
 
-	m_inputSubsystem->AddMappingContext(defaultMappingContext, 0);
-	m_inputSubsystem->AddMappingContext(uiMappingContext, 1);
+	EnableDefaultMappingContext();
 
 }
 
-void AFlawlessAbbeyPlayerController::EnableMovement() {
+void AFlawlessAbbeyPlayerController::AddMappingContext(UInputMappingContext* context, int32 priority) {
 
-	m_inputSubsystem->AddMappingContext(defaultMappingContext, 0);
+	if (context == nullptr) return;
+
+	m_inputSubsystem->AddMappingContext(context, priority);
 
 }
 
-void AFlawlessAbbeyPlayerController::DisableMovement() {
+void AFlawlessAbbeyPlayerController::RemoveMappingContext(UInputMappingContext* context) {
 
-	m_inputSubsystem->RemoveMappingContext(defaultMappingContext);
+	if (context == nullptr) return;
+
+	m_inputSubsystem->RemoveMappingContext(context);
 
 }

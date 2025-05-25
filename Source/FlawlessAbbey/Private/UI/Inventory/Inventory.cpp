@@ -35,19 +35,6 @@ void UInventory::Update(const TArray<FItemSlot>& slots) {
 
 }
 
-void UInventory::CloseInventory() {
-
-    SetVisibility(ESlateVisibility::Hidden);
-
-    TObjectPtr<AFlawlessAbbeyPlayerController> controller = Cast<AFlawlessAbbeyPlayerController>(GetOwningPlayer());
-    if (controller == nullptr) return;
-
-    controller->SetShowMouseCursor(false);
-    controller->SetInputMode(FInputModeGameOnly());
-
-    controller->EnableMovement();
-
-}
 void UInventory::OpenInventory() {
 
     if (!IsInViewport())
@@ -55,12 +42,9 @@ void UInventory::OpenInventory() {
 
     SetVisibility(ESlateVisibility::Visible);
 
-    TObjectPtr<AFlawlessAbbeyPlayerController> controller = Cast<AFlawlessAbbeyPlayerController>(GetOwningPlayer());
-    if (controller == nullptr) return;
+}
+void UInventory::CloseInventory() {
 
-    controller->SetShowMouseCursor(true);
-    controller->SetInputMode(FInputModeGameAndUI());
-
-    controller->DisableMovement();
+    SetVisibility(ESlateVisibility::Hidden);
 
 }

@@ -3,8 +3,13 @@
 #include "Inventory/ItemSlot.h"
 #include "Inventory/ViewportPreview.h"
 
+#include "Player/FlawlessAbbeyCharacter.h"
+#include "Player/FlawlessAbbeyPlayerController.h"
+
 #include "UI/Inventory/Inventory.h"
 #include "UI/Inventory/ViewportPanel.h"
+
+#include <EnhancedInputComponent.h>
 
 UInventoryComponent::UInventoryComponent() {
 	
@@ -22,6 +27,14 @@ void UInventoryComponent::BeginPlay() {
 	spawnParams.Owner = GetOwner();
 
 	m_viewportPreview = GetWorld()->SpawnActor<AViewportPreview>(viewportPreviewClass, viewportPreviewLocation, FRotator(), spawnParams);
+
+	TObjectPtr<AFlawlessAbbeyCharacter> character = Cast<AFlawlessAbbeyCharacter>(GetOwner());
+	if (character == nullptr) return;
+
+	TObjectPtr<UEnhancedInputComponent> inputComponent = Cast<UEnhancedInputComponent>(character->InputComponent);
+	if (inputComponent == nullptr) return;
+
+	inputComponent->BindAction(closeAction, ETriggerEvent::Triggered, this, &UInventoryComponent::CloseInventory);
 	
 }
 
@@ -29,10 +42,34 @@ void UInventoryComponent::OpenInventory() {
 
 	m_inventoryUI->OpenInventory();
 
+	TObjectPtr<AFlawlessAbbeyCharacter> character = Cast<AFlawlessAbbeyCharacter>(GetOwner());
+	if (character == nullptr) return;
+
+	TObjectPtr<AFlawlessAbbeyPlayerController> controller = Cast<AFlawlessAbbeyPlayerController>(character->GetController());
+	if (controller == nullptr) return;
+
+	controller->SetShowMouseCursor(true);
+	controller->SetInputMode(FInputModeGameAndUI());
+
+	controller->DisableDefaultMappingContext();
+	controller->AddMappingContext(inventoryMappingContext);
+
 }
 void UInventoryComponent::CloseInventory() {
 
 	m_inventoryUI->CloseInventory();
+
+	TObjectPtr<AFlawlessAbbeyCharacter> character = Cast<AFlawlessAbbeyCharacter>(GetOwner());
+	if (character == nullptr) return;
+
+	TObjectPtr<AFlawlessAbbeyPlayerController> controller = Cast<AFlawlessAbbeyPlayerController>(character->GetController());
+	if (controller == nullptr) return;
+
+	controller->SetShowMouseCursor(false);
+	controller->SetInputMode(FInputModeGameOnly());
+
+	controller->EnableDefaultMappingContext();
+	controller->RemoveMappingContext(inventoryMappingContext);
 
 }
 

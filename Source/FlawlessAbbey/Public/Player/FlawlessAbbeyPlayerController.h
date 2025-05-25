@@ -17,16 +17,18 @@ class FLAWLESSABBEY_API AFlawlessAbbeyPlayerController : public APlayerControlle
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	void EnableMovement();
+	inline void EnableDefaultMappingContext() { AddMappingContext(defaultMappingContext, 0); }
 	UFUNCTION(BlueprintCallable)
-	void DisableMovement();
+	inline void DisableDefaultMappingContext() { RemoveMappingContext(defaultMappingContext); }
+
+	UFUNCTION(BlueprintCallable)
+	void AddMappingContext(UInputMappingContext* context, int32 priority = 1);
+	UFUNCTION(BlueprintCallable)
+	void RemoveMappingContext(UInputMappingContext* context);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputMappingContext* defaultMappingContext;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputMappingContext* uiMappingContext;
 
 	virtual void BeginPlay() override;
 

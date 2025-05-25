@@ -1,8 +1,11 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "Player/FlawlessAbbeyCharacter.h"
+#include "Player/Interactible.h"
 
 #include "Inventory/InventoryComponent.h"
+
+#include "Dialogue/DialogueManagerComponent.h"
 
 #include <Engine/LocalPlayer.h>
 
@@ -36,6 +39,8 @@ AFlawlessAbbeyCharacter::AFlawlessAbbeyCharacter() {
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
 	m_inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+
+	m_dialogueManager = CreateDefaultSubobject<UDialogueManagerComponent>(TEXT("Dialogue manager"));
 
 }
 
@@ -78,10 +83,33 @@ void AFlawlessAbbeyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerI
 
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFlawlessAbbeyCharacter::Look);
 
+		EnhancedInputComponent->BindAction(interactAction, ETriggerEvent::Triggered, this, &AFlawlessAbbeyCharacter::Interact);
+
 		EnhancedInputComponent->BindAction(openInventoryAction, ETriggerEvent::Triggered, m_inventory.Get(), &UInventoryComponent::OpenInventory);
-		EnhancedInputComponent->BindAction(closeInventoryAction, ETriggerEvent::Triggered, m_inventory.Get(), &UInventoryComponent::CloseInventory);
 	
 	} else
 		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+
+}
+
+void AFlawlessAbbeyCharacter::Interact() {
+
+	if (overlappingInteractible == nullptr) return;
+
+	overlappingInteractible->Interact(this);
+
+}
+
+void AFlawlessAbbeyCharacter::NotifyActorBeginOverlap(AActor* other) {
+
+	overlappingInteractible = Cast<AInteractible>(other);
+
+}
+
+void AFlawlessAbbeyCharacter::NotifyActorEndOverlap(AActor* other) {
+
+	if (overlappingInteractible != other) return;
+
+	overlappingInteractible = nullptr;
 
 }

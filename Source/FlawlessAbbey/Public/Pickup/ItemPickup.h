@@ -18,10 +18,13 @@ public:
 	AItemPickup();
 
 private:
-	UPROPERTY(EditAnywhere) TObjectPtr<UStaticMeshComponent> m_mesh = nullptr;
-	UPROPERTY(EditAnywhere) TObjectPtr<UBoxComponent> m_trigger = nullptr;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> mesh = nullptr;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UBoxComponent> trigger = nullptr;
 
-	UPROPERTY(EditAnywhere) TObjectPtr<UItemData> m_item = nullptr;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UItemData> item = nullptr;
 
 	virtual void BeginPlay() override;
 

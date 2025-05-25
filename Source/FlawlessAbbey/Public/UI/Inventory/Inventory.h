@@ -20,10 +20,9 @@ public:
 	void Update(const TArray<FItemSlot>& slots);
 
 	UFUNCTION(BlueprintCallable)
-	void CloseInventory();
-
-	UFUNCTION(BlueprintCallable)
 	void OpenInventory();
+	UFUNCTION(BlueprintCallable)
+	void CloseInventory();
 
 	UFUNCTION(BlueprintCallable)
 	inline UViewportPanel* GetViewportPanel() const { return viewportPanel; }
